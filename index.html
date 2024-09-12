@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma de Actividades</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #formulario, #lista-actividades {
+            margin-bottom: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cronograma de Actividades</h1>
+    <div id="formulario">
+        <input type="text" id="dia" placeholder="Día">
+        <input type="text" id="actividad" placeholder="Actividad">
+        <button onclick="agregarActividad()">Agregar</button>
+    </div>
+    <div id="lista-actividades">
+        <table id="tabla-actividades">
+            <thead>
+                <tr>
+                    <th>Día</th>
+                    <th>Actividad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        let actividades = [];
+
+        function agregarActividad() {
+            const dia = document.getElementById('dia').value;
+            const actividad = document.getElementById('actividad').value;
+            
+            if (dia && actividad) {
+                actividades.push({ dia, actividad });
+                actualizarTabla();
+                limpiarFormulario();
+            } else {
+                alert('Por favor, ingrese tanto el día como la actividad.');
+            }
+        }
+
+        function actualizarTabla() {
+            const tbody = document.querySelector('#tabla-actividades tbody');
+            tbody.innerHTML = '';
+            
+            actividades.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.dia}</td>
+                    <td>${item.actividad}</td>
+                    <td>
+                        <button onclick="editarActividad(${index})">Editar</button>
+                        <button onclick="eliminarActividad(${index})">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('dia').value = '';
+            document.getElementById('actividad').value = '';
+        }
+
+        function editarActividad(index) {
+            const nuevaActividad = prompt('Editar actividad:', actividades[index].actividad);
+            if (nuevaActividad !== null) {
+                actividades[index].actividad = nuevaActividad;
+                actualizarTabla();
+            }
+        }
+
+        function eliminarActividad(index) {
+            if (confirm('¿Está seguro de que desea eliminar esta actividad?')) {
+                actividades.splice(index, 1);
+                actualizarTabla();
+            }
+        }
+    </script>
+</body>
+</html>
